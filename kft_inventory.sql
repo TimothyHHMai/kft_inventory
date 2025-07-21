@@ -18,8 +18,9 @@ CREATE TABLE `ingredients` (
   `ingredientID` int NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
   `type` ENUM('Syrup', 'Powder', 'Topping', 'Tea') NOT NULL,
-  `quantity_box` INT DEFAULT 0,
-  `quantity_individual` INT DEFAULT 0,
+  `quantity_box` INT DEFAULT NULL,
+  `individual_stock` INT DEFAULT 0,
+  `box_stock` INT DEFAULT 0,
   `expiration_date` DATE NOT NULL,
   PRIMARY KEY (`ingredientID`)
 );
@@ -32,7 +33,8 @@ CREATE TABLE miscellaneous (
   `miscID` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(50) NOT NULL,
   `quantity_box` INT DEFAULT 0,
-  `quantity_individual` INT DEFAULT 0,
+  `individual_stock` INT DEFAULT 0,
+  `box_stock` INT DEFAULT 0,
   PRIMARY KEY (miscID)
 );
 
