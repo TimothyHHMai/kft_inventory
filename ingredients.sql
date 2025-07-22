@@ -20,7 +20,7 @@ DELIMITER //
 
 -- Insert Ingredients
 CREATE PROCEDURE insert_ingredient(
-    IN in_name VARCHAR(50),
+    IN in_ingredientName VARCHAR(50),
     IN in_type ENUM('Syrup', 'Powder', 'Topping', 'Tea'),
     IN in_quantity_box INT,
     IN in_current_individual_stock INT,
@@ -28,8 +28,8 @@ CREATE PROCEDURE insert_ingredient(
     IN in_expiration_date DATE
 )
 BEGIN
-    INSERT INTO `ingredients` (`name`, `type`, `quantity_box`, `current_individual_stock`, `in_current_box_stock`, `expiration_date`)
-    VALUES (in_name, in_type, in_quantity_box, in_current_individual_stock, in_current_box_stock, in_expiration_date);
+    INSERT INTO `ingredients` (`ingredientName`, `type`, `quantity_box`, `current_individual_stock`, `in_current_box_stock`, `expiration_date`)
+    VALUES (in_ingredientName, in_type, in_quantity_box, in_current_individual_stock, in_current_box_stock, in_expiration_date);
 END //
 
 DELIMITER ;
@@ -50,7 +50,7 @@ DELIMITER //
 -- Update Ingredients
 CREATE PROCEDURE update_ingredient(
     IN in_ingredientID INT,
-    IN in_name VARCHAR(50),
+    IN in_ningredientName VARCHAR(50),
     IN in_type ENUM('Syrup', 'Powder', 'Topping', 'Tea'),
     IN in_quantity_box INT,
     IN in_current_individual_stock INT,
@@ -59,7 +59,7 @@ CREATE PROCEDURE update_ingredient(
 )
 BEGIN
     UPDATE `ingredients`
-    SET `name` = in_name,
+    SET `name` = in_ingredientName,
         `type` = in_type,
         `quantity_box` = in_quantity_box,
         `current_individual_stock` = in_current_individual_stock,
@@ -91,39 +91,46 @@ CREATE PROCEDURE addFromIngredients(
     IN i_ingredientID INT,
     IN i_quantityToAddIndividual INT,
     IN i_quantityToAddBox INT
-    
 )
 BEGIN
-    DECLARE current_boxStock INT;
-    DECLARE current_individualStock INT;
+    DECLARE temp_box_stock INT;
+    DECLARE temp_individual_stock INT;
     DECLARE quantityBox INT;
+    DECLARE ingredient_Name VARCHAR(99);
     DECLARE msg VARCHAR(255);
+    DECLARE row_found INT DEFAULT 1;
 	
-    IF EXISTS (
-		SELECT current_individual_stock, current_box_stock, quantity_box, ingredientName
-		INTO current_individualStock, current_boxStock, quantityBox, ingredient_Name
-		FROM ingredients
-		WHERE ingredientID = i_ingredientID) THEN
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET row_found = 0;
+    
+	SELECT current_individual_stock, current_box_stock, quantity_box, ingredientName
+	INTO temp_individual_stock, temp_box_stock, quantityBox, ingredient_Name
+	FROM ingredients
+	WHERE ingredientID = i_ingredientID;
         
-		SET current_boxStock = quantityToAddBox;
-		SET current_individualStock = current_individualStock + i_quantityToAddIndividual;
+	IF row_found = 1 THEN
         
+		SET temp_box_stock = temp_box_stock + i_quantityToAddBox;
+		SET temp_individual_stock = temp_individual_stock + i_quantityToAddIndividual;
+        
+        SET msg = '';
                 
-        IF current_individual_stock <= 0 AND current_boxStock > 0 THEN
-			SET current_individual_stock = current_individualStock + quantityBox;
-		ELSE
-			SET msg = CONCAT(' ** WARNING** current box stock is empty'); 
+        IF temp_individual_stock <= 0 THEN
+            IF temp_box_stock > 0 THEN
+				SET temp_individual_stock = temp_individual_stock + quantityBox;
+			ELSE
+				SET msg = CONCAT(' ** WARNING** current box stock is empty | '); 
+			END IF;
 		END IF;
             
 		
-		SET msg = concat('Successfully added ', i_quantityToAddBox, ' boxes and ', i_quantityToAddIndividual, ' individuals from stock for ingredientID ',
-                i_ingredientID, i_ingredientName);
-		SET msg = concat(' | remaining current_box_stock: ', current_boxStock, ' | remaining current_individual_stock: ', current_individualStock);
+		SET msg = concat(msg, 'Successfully added ', i_quantityToAddBox, ' boxes and ', i_quantityToAddIndividual, ' individuals from stock for ingredientID ',
+                i_ingredientID, ', ', ingredient_Name);
+		SET msg = concat(msg, ' | remaining current_box_stock: ', temp_box_stock, ' | remaining current_individual_stock: ', temp_individual_stock);
             
             
 		UPDATE ingredients
-			SET current_individual_stock = current_individualStock,
-				current_box_stock = current_boxStock
+			SET current_individual_stock = temp_individual_stock,
+				current_box_stock = temp_box_stock
 			WHERE ingredientID = i_ingredientID;
 			
 			SELECT msg AS message;
@@ -135,40 +142,5 @@ BEGIN
 END //
 
 DELIMITER ;
-
-/*
-
-DELIMITER //
-CREATE PROCEDURE addFromIngredients(
-    IN i_ingredientID INT,
-    IN i_quantityToAddIndividual INT,
-    IN i_quantityToAddBox INT
-    
-)
-BEGIN
-    DECLARE current_boxStock INT;
-    DECLARE current_individualStock INT;
-
-    SELECT current_individual_stock, current_box_stock
-    INTO current_individualStock, current_boxStock
-    FROM ingredients
-    WHERE ingredientID = i_ingredientID;
-	
-    IF current_individualStock IS NOT NULL AND current_individualStock >= i_quantityToAddIndividual AND
-		current_boxStock IS NOT NULL AND current_boxStock >= i_quantityToAddBox THEN
-        UPDATE ingredients
-        SET current_individual_stock = current_individualStock + i_quantityToAddIndividual,
-			current_box_stock = current_boxStock + i_quantityToAddBox
-        WHERE ingredientID = i_ingredientID;
-        
-		SELECT CONCAT('Successfully added ', i_quantityToAddBox, ' boxes and ', i_quantityToAddIndividual, ' individuals from stock for ingredientID ', i_ingredientID) AS message;
-
-    ELSE
-        SELECT 'Error: Product not found or insufficient stock' AS message;
-    END IF;
-END //
-
-DELIMITER ;
-*/
 
 -- check if stock is low 

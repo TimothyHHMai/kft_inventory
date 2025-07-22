@@ -16,7 +16,7 @@ DROP TABLE IF EXISTS `ingredients`;
 
 CREATE TABLE `ingredients` (
   `ingredientID` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
+  `ingredientName` varchar(50) NOT NULL,
   `type` ENUM('Syrup', 'Powder', 'Topping', 'Tea') NOT NULL,
   `quantity_box` INT DEFAULT 0,
   `current_individual_stock` INT DEFAULT 0,
@@ -39,7 +39,7 @@ CREATE TABLE miscellaneous (
 );
 
 /*Data for the table `ingredients` */
-INSERT INTO `ingredients`(`name`, `type`, `quantity_box`, `current_individual_stock`, `current_box_stock`, `expiration_date`) VALUES 
+INSERT INTO `ingredients`(`ingredientName`, `type`, `quantity_box`, `current_individual_stock`, `current_box_stock`, `expiration_date`) VALUES 
 ('Mango Popping', 'Topping', 4, 3, 3, '2026-06-30'),
 ('Crystal Boba', 'Topping', 20, 15, 4, '2026-04-30'),
 ('Boba', 'Topping', 8, 8, 12, '2026-05-28'),
