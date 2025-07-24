@@ -85,9 +85,12 @@ END //
 DELIMITER ;
 
 -- add/subtract ingredients
+-- **FRONT END add a caution confirmation if the result will be negative
 DELIMITER //
 
+
 CREATE PROCEDURE addFromIngredients(
+	IN auto_box INT, -- determines if current_individual_stock is reduced to zero, current_box_stock will automatically reduce
     IN i_ingredientID INT,
     IN i_quantityToAddIndividual INT,
     IN i_quantityToAddBox INT
@@ -113,15 +116,20 @@ BEGIN
 		SET temp_individual_stock = temp_individual_stock + i_quantityToAddIndividual;
         
         SET msg = '';
-                
-        IF temp_individual_stock <= 0 THEN
+		
+        break_loop: WHILE temp_individual_stock <= 0 DO
+			
             IF temp_box_stock > 0 THEN
 				SET temp_individual_stock = temp_individual_stock + quantityBox;
+	
+                IF auto_box = 1 THEN
+					SET temp_box_stock = temp_box_stock - 1;
+				END IF;
 			ELSE
 				SET msg = CONCAT(' ** WARNING** current box stock is empty | '); 
+				LEAVE break_loop;
 			END IF;
-		END IF;
-            
+		END WHILE break_loop;
 		
 		SET msg = concat(msg, 'Successfully added ', i_quantityToAddBox, ' boxes and ', i_quantityToAddIndividual, ' individuals from stock for ingredientID ',
                 i_ingredientID, ', ', ingredient_Name);
@@ -143,4 +151,43 @@ END //
 
 DELIMITER ;
 
--- check if stock is low 
+
+-- Check if stock is under a threshold
+DELIMITER //
+
+-- 'i' = individual, 'b' = box
+CREATE PROCEDURE check_supplies (
+	IN stock_type CHAR,
+	IN threshold int
+)
+BEGIN 
+	IF stock_type = 'i' THEN 
+		SELECT ingredientName, current_individual_stock
+        FROM ingredients
+		WHERE current_individual_stock < threshold;
+	ELSEIF stock_type = 'b' THEN
+		SELECT ingredientName, current_box_stock
+        FROM ingredients
+		WHERE current_individual_stock < threshold;
+	END IF;
+
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+-- check expiration
+
+CREATE PROCEDURE check_expiration (
+	in dateValue date
+)
+BEGIN 
+
+SELECT ingredientName, expiration_date
+FROM ingredients
+WHERE expiration_date < dateValue;
+
+END //
+
+DELIMITER ;
