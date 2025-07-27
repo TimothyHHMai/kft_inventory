@@ -30,12 +30,12 @@ CREATE TABLE `ingredients` (
 DROP TABLE IF EXISTS `miscellaneous`;
 
 CREATE TABLE miscellaneous (
-  `miscID` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(50) NOT NULL,
-  `quantity_box` INT DEFAULT NULL,
-  `current_individual_stock` INT DEFAULT NULL,
+  `miscellaneousID` INT NOT NULL AUTO_INCREMENT,
+  `miscellaneous_name` VARCHAR(50) NOT NULL,
+  `quantity_box` INT DEFAULT 0,
+  `current_individual_stock` INT DEFAULT 0,
   `current_box_stock` INT DEFAULT 0,
-  PRIMARY KEY (miscID)
+  PRIMARY KEY (miscellaneousID)
 );
 
 /*Data for the table `ingredients` */
@@ -47,9 +47,9 @@ INSERT INTO `ingredients`(`ingredientName`, `type`, `quantity_box`, `current_ind
 
 
 /*Data for the table `miscellaneous` */
-INSERT INTO `miscellaneous`(`name`,`quantity_box`, `current_individual_stock`, `current_box_stock`) VALUES 
-('Large Straws', NULL, NULL, 6),
-('Small Straws', NULL, NULL, 3),
-('Large Cups', NULL, NULL, 3),
-('Medium Cups', NULL, NULL, 5);
+INSERT INTO `miscellaneous`(`miscellaneous_name`,`quantity_box`, `current_individual_stock`, `current_box_stock`) VALUES 
+('Large Straws', 30, 26, 6),
+('Small Straws', 30, 19, 3),
+('Large Cups', 20, 16, 3),
+('Medium Cups', 20, 29, 5);
 

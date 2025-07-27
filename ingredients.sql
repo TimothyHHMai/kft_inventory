@@ -144,7 +144,7 @@ BEGIN
 			SELECT msg AS message;
         
 	ELSE
-			SELECT 'Error: Product not found or insufficient stock' AS message;
+			SELECT 'Error: Item not found or insufficient stock' AS message;
 	END IF;
 	
 END //
@@ -156,7 +156,7 @@ DELIMITER ;
 DELIMITER //
 
 -- 'i' = individual, 'b' = box
-CREATE PROCEDURE check_supplies (
+CREATE PROCEDURE check_supplies_ingredients (
 	IN stock_type CHAR,
 	IN threshold int
 )
@@ -179,7 +179,7 @@ DELIMITER //
 
 -- check expiration
 
-CREATE PROCEDURE check_expiration (
+CREATE PROCEDURE check_expiration_ingredients (
 	in dateValue date
 )
 BEGIN 
