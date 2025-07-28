@@ -1,8 +1,11 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from .models import Ingredient, Miscellaneous
 
 def home(request):
-    return render(
-            request, 'users/home.html'
-
-    )
+    ingredients = Ingredient.objects.all()
+    misc_items = Miscellaneous.objects.all()
+    
+    return render(request, 'users/home.html', {
+        'ingredients': ingredients,
+        'misc_items': misc_items
+    })

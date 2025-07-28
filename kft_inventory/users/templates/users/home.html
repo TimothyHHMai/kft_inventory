@@ -1,56 +1,70 @@
+<!-- templates/homepage.html -->
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <title>KFT Database</title>
   <style>
     body {
-        font-family: Arial, sans-serif;
-        padding: 20px;
+      font-family: Arial, sans-serif;
+      padding: 20px;
     }
 
     header {
-        background-color: lightpink;
-        color: white;
-        padding: 15px;
-        text-align: center;
+      background-color: #333;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+
+    section {
+      margin-bottom: 40px;
+    }
+
+    h2 {
+      border-bottom: 2px solid #ccc;
+      padding-bottom: 5px;
     }
 
     ul {
-        list-style-type: none;
-        padding: 0;
+      list-style: none;
+      padding: 0;
     }
 
     li {
-        background: #eee;
-        margin: 10px 0;
-        padding: 10px;
-        border-radius: 5px;
+      background: #f4f4f4;
+      margin: 5px 0;
+      padding: 10px;
+      border-radius: 5px;
     }
   </style>
 </head>
 <body>
-    <header>
-        <h1>KFT Database</h1>
-    </header>
+  <header>
+    <h1>KFT Database</h1>
+  </header>
 
-
-    <ul class="item-list">
-        <li>Milk Tea</li>
-        <li>Boba</li>
-        <li>Taro Powder</li>
-        <li>Mango Syrup</li>
-        <li>Paper Cups</li>
+  <section>
+    <h2>Ingredients</h2>
+    <ul>
+      {% for ingredient in ingredients %}
+        <li>{{ ingredient.ingredientName }} - {{ ingredient.type }} (Boxes: {{ ingredient.current_box_stock }}, Individual: {{ ingredient.current_individual_stock }})</li>
+      {% empty %}
+        <li>No ingredients found.</li>
+      {% endfor %}
     </ul>
+  </section>
 
-    <!--
-        <ul>
-        {% for item in items %}
-        <li>{{ item }}</li>
-        {% endfor %}
+  <section>
+    <h2>Miscellaneous</h2>
+    <ul>
+      {% for item in misc_items %}
+        <li>{{ item.miscellaneous_name }} (Boxes: {{ item.current_box_stock }}, Individual: {{ item.current_individual_stock }})</li>
+      {% empty %}
+        <li>No miscellaneous items found.</li>
+      {% endfor %}
     </ul>
-    -->
-
+  </section>
 </body>
 </html>
