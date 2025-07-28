@@ -26,7 +26,7 @@ CREATE PROCEDURE insert_miscellaneous(
     IN in_box_stock INT
 )
 BEGIN
-    INSERT INTO `miscellaneouss` (`miscellaneous_name`, `quantity_box`, `individual_stock`, `in_box_stock`)
+    INSERT INTO `miscellaneous` (`miscellaneous_name`, `quantity_box`, `individual_stock`, `in_box_stock`)
     VALUES (in_miscellaneous_name, in_quantity_box, in_individual_stock, in_box_stock);
 END //
 
@@ -85,9 +85,9 @@ DELIMITER //
 
 CREATE PROCEDURE addFromMiscellaneous(
 	IN auto_box INT, -- determines if current_individual_stock is reduced to zero, current_box_stock will automatically reduce
-    IN i_miscellaneousID INT,
-    IN i_quantityToAddIndividual INT,
-    IN i_quantityToAddBox INT
+    IN t_miscellaneousID INT,
+    IN t_quantityToAddIndividual INT,
+    IN t_quantityToAddBox INT
 )
 BEGIN
     DECLARE temp_box_stock INT;
@@ -102,12 +102,12 @@ BEGIN
 	SELECT current_individual_stock, current_box_stock, quantity_box, miscellaneous_name
 	INTO temp_individual_stock, temp_box_stock, quantityBox, miscellaneous_name
 	FROM miscellaneous
-	WHERE miscellaneousID = i_miscellaneousID;
+	WHERE miscellaneousID = t_miscellaneousID;
         
 	IF row_found = 1 THEN
         
-		SET temp_box_stock = temp_box_stock + i_quantityToAddBox;
-		SET temp_individual_stock = temp_individual_stock + i_quantityToAddIndividual;
+		SET temp_box_stock = temp_box_stock + t_quantityToAddBox;
+		SET temp_individual_stock = temp_individual_stock + t_quantityToAddIndividual;
         
         SET msg = '';
 		
@@ -125,15 +125,15 @@ BEGIN
 			END IF;
 		END WHILE break_loop;
 		
-		SET msg = concat(msg, 'Successfully added ', i_quantityToAddBox, ' boxes and ', i_quantityToAddIndividual, ' individuals from stock for miscellaneousID ',
-                i_miscellaneousID, ', ', miscellaneous_name);
+		SET msg = concat(msg, 'Successfully added ', t_quantityToAddBox, ' boxes and ', t_quantityToAddIndividual, ' individuals from stock for miscellaneousID ',
+                t_miscellaneousID, ', ', miscellaneous_name);
 		SET msg = concat(msg, ' | remaining current_box_stock: ', temp_box_stock, ' | remaining current_individual_stock: ', temp_individual_stock);
             
             
 		UPDATE miscellaneous
 			SET current_individual_stock = temp_individual_stock,
 				current_box_stock = temp_box_stock
-			WHERE miscellaneousID = i_miscellaneousID;
+			WHERE miscellaneousID = t_miscellaneousID;
 			
 			SELECT msg AS message;
         

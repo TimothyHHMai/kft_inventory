@@ -47,7 +47,7 @@ INSERT INTO `ingredients`(`ingredientName`, `type`, `quantity_box`, `current_ind
 
 
 /*Data for the table `miscellaneous` */
-INSERT INTO `miscellaneous`(`miscellaneous_name`,`quantity_box`, `current_individual_stock`, `current_box_stock`) VALUES 
+INSERT INTO `miscellaneous`(`miscellaneous_name`, `quantity_box`, `current_individual_stock`, `current_box_stock`) VALUES 
 ('Large Straws', 30, 26, 6),
 ('Small Straws', 30, 19, 3),
 ('Large Cups', 20, 16, 3),
