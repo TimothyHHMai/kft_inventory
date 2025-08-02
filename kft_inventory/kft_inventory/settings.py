@@ -79,7 +79,7 @@ DATABASES = {
         'NAME': 'kftinventory',
         'USER': 'root',
         'PASSWORD': 'Tmaisw1433',
-        'HOST': '127.0.0.1',
+        'HOST': 'localhost',
         'PORT': '3306',
     }
 }
