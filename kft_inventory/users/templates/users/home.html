@@ -46,25 +46,68 @@
   </header>
 
   <section>
-    <h2>Ingredients</h2>
-    <ul>
-      {% for ingredient in ingredients %}
-        <li>{{ ingredient.ingredient_name }} - {{ ingredient.type }} (Boxes: {{ ingredient.current_box_stock }}, Individual: {{ ingredient.current_individual_stock }})</li>
-      {% empty %}
-        <li>No ingredients found.</li>
-      {% endfor %}
-    </ul>
-  </section>
+  <h2>Ingredients</h2>
+  <ul id="ingredient-list">
 
-  <section>
-    <h2>Miscellaneous</h2>
-    <ul>
-      {% for item in misc_items %}
-        <li>{{ item.miscellaneous_name }} (Boxes: {{ item.current_box_stock }}, Individual: {{ item.current_individual_stock }})</li>
-      {% empty %}
-        <li>No miscellaneous items found.</li>
-      {% endfor %}
-    </ul>
-  </section>
+  </ul>
+</section>
+
+<script>
+  async function fetchIngredients() {
+    const response = await fetch('/api/ingredients/');
+    const data = await response.json();
+    const list = document.getElementById('ingredient-list');
+    list.innerHTML = '';
+
+    if (data.ingredients.length === 0) {
+      list.innerHTML = '<li>No ingredients found.</li>';
+      return;
+    }
+
+    data.ingredients.forEach(item => {
+      const li = document.createElement('li');
+      li.textContent = `${item.ingredient_name} - ${item.type} (Boxes: ${item.current_box_stock}, Individual: ${item.current_individual_stock})`;
+      list.appendChild(li);
+    });
+  }
+
+  // Initial load
+  fetchIngredients();
+
+</script>
+
+
+<section>
+  <h2>Miscellaneous</h2>
+  <ul id="miscellaneous-list">
+
+  </ul>
+</section>
+
+<script>
+  async function fetchMiscellaneous() {
+    const response = await fetch('/api/miscellaneous/');
+    const data = await response.json();
+    const list = document.getElementById('miscellaneous-list');
+    list.innerHTML = '';
+
+    if (data.miscellaneous.length === 0) {
+      list.innerHTML = '<li>No miscellaneous found.</li>';
+      return;
+    }
+
+    data.miscellaneous.forEach(item => {
+      const li = document.createElement('li');
+      li.textContent = `${item.miscellaneous_name} - (Boxes: ${item.current_box_stock}, Individual: ${item.current_individual_stock})`;
+      list.appendChild(li);
+    });
+  }
+
+  // Initial load
+  fetchMiscellaneous();
+
+</script>
+
+
 </body>
 </html>
