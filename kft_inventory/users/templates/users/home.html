@@ -12,7 +12,7 @@
     }
 
     header {
-      background-color: #333;
+      background-color: lightcoral;
       color: white;
       padding: 15px;
       text-align: center;
@@ -49,7 +49,7 @@
     <h2>Ingredients</h2>
     <ul>
       {% for ingredient in ingredients %}
-        <li>{{ ingredient.ingredientName }} - {{ ingredient.type }} (Boxes: {{ ingredient.current_box_stock }}, Individual: {{ ingredient.current_individual_stock }})</li>
+        <li>{{ ingredient.ingredient_name }} - {{ ingredient.type }} (Boxes: {{ ingredient.current_box_stock }}, Individual: {{ ingredient.current_individual_stock }})</li>
       {% empty %}
         <li>No ingredients found.</li>
       {% endfor %}

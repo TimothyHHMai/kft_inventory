@@ -75,7 +75,7 @@ WSGI_APPLICATION = 'kft_inventory.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'kftinventory',
         'USER': 'root',
         'PASSWORD': 'Tmaisw1433',
