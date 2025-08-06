@@ -1,0 +1,82 @@
+[
+  {
+    "model": "users.ingredient",
+    "fields": {
+      "ingredient_name": "Mango Popping",
+      "type": "Topping",
+      "quantity_box": 4,
+      "current_individual_stock": 3,
+      "current_box_stock": 3,
+      "expiration_date": "2026-06-30"
+    }
+  },
+  {
+    "model": "users.ingredient",
+    "fields": {
+      "ingredient_name": "Crystal Boba",
+      "type": "Topping",
+      "quantity_box": 20,
+      "current_individual_stock": 15,
+      "current_box_stock": 4,
+      "expiration_date": "2026-04-30"
+    }
+  },
+  {
+    "model": "users.ingredient",
+    "fields": {
+      "ingredient_name": "Boba",
+      "type": "Topping",
+      "quantity_box": 8,
+      "current_individual_stock": 8,
+      "current_box_stock": 12,
+      "expiration_date": "2026-05-28"
+    }
+  },
+  {
+    "model": "users.ingredient",
+    "fields": {
+      "ingredient_name": "Strawberry Syrup",
+      "type": "Syrup",
+      "quantity_box": 4,
+      "current_individual_stock": 4,
+      "current_box_stock": 5,
+      "expiration_date": "2026-05-30"
+    }
+  },
+  {
+    "model": "users.miscellaneous",
+    "fields": {
+      "miscellaneous_name": "Large Straws",
+      "quantity_box": 30,
+      "current_individual_stock": 26,
+      "current_box_stock": 6
+    }
+  },
+  {
+    "model": "users.miscellaneous",
+    "fields": {
+      "miscellaneous_name": "Small Straws",
+      "quantity_box": 30,
+      "current_individual_stock": 19,
+      "current_box_stock": 3
+    }
+  },
+  {
+    "model": "users.miscellaneous",
+    "fields": {
+      "miscellaneous_name": "Large Cups",
+      "quantity_box": 20,
+      "current_individual_stock": 16,
+      "current_box_stock": 3
+    }
+  },
+  {
+    "model": "users.miscellaneous",
+    "fields": {
+      "miscellaneous_name": "Medium Cups",
+      "quantity_box": 20,
+      "current_individual_stock": 29,
+      "current_box_stock": 5
+    }
+  }
+]

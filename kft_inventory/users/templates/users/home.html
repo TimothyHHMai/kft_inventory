@@ -1,5 +1,3 @@
-<!-- templates/homepage.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -46,67 +44,189 @@
   </header>
 
   <section>
-  <h2>Ingredients</h2>
-  <ul id="ingredient-list">
+    <h2>Ingredients</h2>
 
-  </ul>
-</section>
+    <form id="ingredient-form">
+      <input type="hidden" id="ingredientID">
+      <input type="text" id="ingredient_name" placeholder="Name" required>
+      <select id="type">
+        <option value="Syrup">Syrup</option>
+        <option value="Powder">Powder</option>
+        <option value="Topping">Topping</option>
+        <option value="Tea">Tea</option>
+      </select>
+      <input type="number" id="quantity_box" placeholder="Quantity per Box" required>
+      <input type="number" id="current_box_stock" placeholder="Box Stock" required>
+      <input type="number" id="current_individual_stock" placeholder="Individual Stock" required>
+      <input type="date" id="expiration_date" required>
+      <button type="submit">Save Ingredient</button>
+    </form>
 
-<script>
-  async function fetchIngredients() {
-    const response = await fetch('/api/ingredients/');
-    const data = await response.json();
-    const list = document.getElementById('ingredient-list');
-    list.innerHTML = '';
+    <ul id="ingredient-list"></ul>
+  </section>
 
-    if (data.ingredients.length === 0) {
-      list.innerHTML = '<li>No ingredients found.</li>';
-      return;
+  <script>
+    async function fetchIngredients() {
+      const response = await fetch('/api/ingredients/');
+      const data = await response.json();
+      const list = document.getElementById('ingredient-list');
+      list.innerHTML = '';
+
+      if (data.ingredients.length === 0) {
+        list.innerHTML = '<li>No ingredients found.</li>';
+        return;
+      }
+
+      data.ingredients.forEach(item => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          ${item.ingredient_name} - ${item.type} 
+          (Boxes: ${item.current_box_stock}, Individual: ${item.current_individual_stock})
+          <button onclick="editIngredient(${item.ingredientID})">Edit</button>
+          <button onclick="deleteIngredient(${item.ingredientID})">Delete</button>
+        `;
+        list.appendChild(li);
+      });
     }
 
-    data.ingredients.forEach(item => {
-      const li = document.createElement('li');
-      li.textContent = `${item.ingredient_name} - ${item.type} (Boxes: ${item.current_box_stock}, Individual: ${item.current_individual_stock})`;
-      list.appendChild(li);
+    document.getElementById('ingredient-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const id = document.getElementById('ingredientID').value;
+      const payload = {
+        ingredient_name: document.getElementById('ingredient_name').value,
+        type: document.getElementById('type').value,
+        quantity_box: parseInt(document.getElementById('quantity_box').value),
+        current_box_stock: parseInt(document.getElementById('current_box_stock').value),
+        current_individual_stock: parseInt(document.getElementById('current_individual_stock').value),
+        expiration_date: document.getElementById('expiration_date').value
+      };
+
+      const url = id ? `/api/ingredients/${id}/` : `/api/ingredients/`;
+      const method = id ? 'PUT' : 'POST';
+
+      await fetch(url, {
+        method: method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      this.reset();
+      fetchIngredients();
     });
-  }
 
-  // Initial load
-  fetchIngredients();
+    async function editIngredient(id) {
+      const response = await fetch(`/api/ingredients/${id}/`);
+      const data = await response.json();
 
-</script>
-
-
-<section>
-  <h2>Miscellaneous</h2>
-  <ul id="miscellaneous-list">
-
-  </ul>
-</section>
-
-<script>
-  async function fetchMiscellaneous() {
-    const response = await fetch('/api/miscellaneous/');
-    const data = await response.json();
-    const list = document.getElementById('miscellaneous-list');
-    list.innerHTML = '';
-
-    if (data.miscellaneous.length === 0) {
-      list.innerHTML = '<li>No miscellaneous found.</li>';
-      return;
+      document.getElementById('ingredientID').value = id;
+      document.getElementById('ingredient_name').value = data.ingredient_name;
+      document.getElementById('type').value = data.type;
+      document.getElementById('quantity_box').value = data.quantity_box;
+      document.getElementById('current_box_stock').value = data.current_box_stock;
+      document.getElementById('current_individual_stock').value = data.current_individual_stock;
+      document.getElementById('expiration_date').value = data.expiration_date;
     }
 
-    data.miscellaneous.forEach(item => {
-      const li = document.createElement('li');
-      li.textContent = `${item.miscellaneous_name} - (Boxes: ${item.current_box_stock}, Individual: ${item.current_individual_stock})`;
-      list.appendChild(li);
+    async function deleteIngredient(id) {
+      if (!confirm('Are you sure you want to delete this ingredient?')) return;
+
+      await fetch(`/api/ingredients/${id}/`, {
+        method: 'DELETE'
+      });
+
+      fetchIngredients();
+    }
+
+    fetchIngredients();
+  </script>
+
+  <section>
+    <h2>Miscellaneous</h2>
+
+    <form id="miscellaneous-form">
+      <input type="hidden" id="miscellaneousID">
+      <input type="text" id="miscellaneous_name" placeholder="Name" required>
+      <input type="number" id="quantity_box" placeholder="Quantity per Box" required>
+      <input type="number" id="current_box_stock" placeholder="Box Stock" required>
+      <input type="number" id="current_individual_stock" placeholder="Individual Stock" required>
+      <button type="submit">Save Miscellaneous</button>
+    </form>
+
+    <ul id="miscellaneous-list"></ul>
+  </section>
+
+  <script>
+    async function fetchMiscellaneous() {
+      const response = await fetch('/api/miscellaneous/');
+      const data = await response.json();
+      const list = document.getElementById('miscellaneous-list');
+      list.innerHTML = '';
+
+      if (data.miscellaneous.length === 0) {
+        list.innerHTML = '<li>No miscellaneous found.</li>';
+        return;
+      }
+
+      data.miscellaneous.forEach(item => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          ${item.miscellaneous_name} - 
+          (Boxes: ${item.current_box_stock}, Individual: ${item.current_individual_stock})
+          <button onclick="editIngredient(${item.miscellaneousID})">Edit</button>
+          <button onclick="deleteIngredient(${item.miscellaneousID})">Delete</button>
+        `;
+        list.appendChild(li);
+      });
+    }
+
+    document.getElementById('miscellaneous-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const id = document.getElementById('miscellaneousID').value;
+      const payload = {
+        miscellaneous_name: document.getElementById('miscellaneous_name').value,
+        quantity_box: parseInt(document.getElementById('quantity_box').value),
+        current_box_stock: parseInt(document.getElementById('current_box_stock').value),
+        current_individual_stock: parseInt(document.getElementById('current_individual_stock').value),
+      };
+
+      const url = id ? `/api/miscellaneous/${id}/` : `/api/miscellaneous/`;
+      const method = id ? 'PUT' : 'POST';
+
+      await fetch(url, {
+        method: method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      this.reset();
+      fetchMiscellaneous();
     });
-  }
 
-  // Initial load
-  fetchMiscellaneous();
+    async function editMiscellaneous(id) {
+      const response = await fetch(`/api/miscellaneous/${id}/`);
+      const data = await response.json();
 
-</script>
+      document.getElementById('miscellaneousID').value = id;
+      document.getElementById('miscellaneous_name').value = data.miscellaneous_name;
+      document.getElementById('quantity_box').value = data.quantity_box;
+      document.getElementById('current_box_stock').value = data.current_box_stock;
+      document.getElementById('current_individual_stock').value = data.current_individual_stock;
+    }
+
+    async function deleteMiscellaneoust(id) {
+      if (!confirm('Are you sure you want to delete this miscellaneous?')) return;
+
+      await fetch(`/api/miscellaneous/${id}/`, {
+        method: 'DELETE'
+      });
+
+      fetchMiscellaneous();
+    }
+
+    fetchMiscellaneous();
+  </script>
 
 
 </body>

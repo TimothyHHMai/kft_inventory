@@ -50,7 +50,7 @@ DELIMITER //
 -- Update Ingredients
 CREATE PROCEDURE update_ingredient(
     IN in_ingredientID INT,
-    IN in_ningredient_name VARCHAR(50),
+    IN in_ingredient_name VARCHAR(50),
     IN in_type ENUM('Syrup', 'Powder', 'Topping', 'Tea'),
     IN in_quantity_box INT,
     IN in_current_individual_stock INT,
@@ -59,7 +59,7 @@ CREATE PROCEDURE update_ingredient(
 )
 BEGIN
     UPDATE `ingredients`
-    SET `name` = in_ingredient_name,
+    SET `ingredient_name` = in_ingredient_name,
         `type` = in_type,
         `quantity_box` = in_quantity_box,
         `current_individual_stock` = in_current_individual_stock,
