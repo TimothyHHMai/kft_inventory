@@ -7,8 +7,7 @@
 ### 2. python manage.py makemigrations
 ### 3. python manage.py migrate
 ### 4. **IN SQL** run procedure scripts
-### 5. python manage.py migrate
-### 6. python manage.py loaddata initial_data.json
+### 5. python manage.py loaddata initial_data.json
 
 ## Run server
 
