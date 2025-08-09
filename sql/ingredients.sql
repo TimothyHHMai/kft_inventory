@@ -2,7 +2,7 @@
 /*
 CREATE TABLE `ingredients` (
   `ingredientID` int NOT NULL AUTO_INCREMENT,
-  `ingredientName` varchar(50) NOT NULL,
+  `ingredient_name` varchar(50) NOT NULL,
   `type` ENUM('Syrup', 'Powder', 'Topping', 'Tea') NOT NULL,
   `quantity_box` INT DEFAULT 0,
   `current_individual_stock` INT DEFAULT 0,
@@ -20,7 +20,7 @@ DELIMITER //
 
 -- Insert Ingredients
 CREATE PROCEDURE insert_ingredient(
-    IN in_ingredientName VARCHAR(50),
+    IN in_ingredient_name VARCHAR(50),
     IN in_type ENUM('Syrup', 'Powder', 'Topping', 'Tea'),
     IN in_quantity_box INT,
     IN in_current_individual_stock INT,
@@ -28,8 +28,8 @@ CREATE PROCEDURE insert_ingredient(
     IN in_expiration_date DATE
 )
 BEGIN
-    INSERT INTO `ingredients` (`ingredientName`, `type`, `quantity_box`, `current_individual_stock`, `in_current_box_stock`, `expiration_date`)
-    VALUES (in_ingredientName, in_type, in_quantity_box, in_current_individual_stock, in_current_box_stock, in_expiration_date);
+	INSERT INTO `ingredients` (`ingredient_name`, `type`, `quantity_box`, `current_individual_stock`, `current_box_stock`, `expiration_date`)
+	VALUES (in_ingredient_name, in_type, in_quantity_box, in_current_individual_stock, in_current_box_stock, in_expiration_date);
 END //
 
 DELIMITER ;
@@ -50,7 +50,7 @@ DELIMITER //
 -- Update Ingredients
 CREATE PROCEDURE update_ingredient(
     IN in_ingredientID INT,
-    IN in_ningredientName VARCHAR(50),
+    IN in_ingredient_name VARCHAR(50),
     IN in_type ENUM('Syrup', 'Powder', 'Topping', 'Tea'),
     IN in_quantity_box INT,
     IN in_current_individual_stock INT,
@@ -59,7 +59,7 @@ CREATE PROCEDURE update_ingredient(
 )
 BEGIN
     UPDATE `ingredients`
-    SET `name` = in_ingredientName,
+    SET `ingredient_name` = in_ingredient_name,
         `type` = in_type,
         `quantity_box` = in_quantity_box,
         `current_individual_stock` = in_current_individual_stock,
@@ -105,7 +105,7 @@ BEGIN
 	
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET row_found = 0;
     
-	SELECT current_individual_stock, current_box_stock, quantity_box, ingredientName
+	SELECT current_individual_stock, current_box_stock, quantity_box, ingredient_name
 	INTO temp_individual_stock, temp_box_stock, quantityBox, ingredient_Name
 	FROM ingredients
 	WHERE ingredientID = i_ingredientID;
@@ -162,11 +162,11 @@ CREATE PROCEDURE check_supplies_ingredients (
 )
 BEGIN 
 	IF stock_type = 'i' THEN 
-		SELECT ingredientName, current_individual_stock
+		SELECT ingredient_name, current_individual_stock
         FROM ingredients
 		WHERE current_individual_stock < threshold;
 	ELSEIF stock_type = 'b' THEN
-		SELECT ingredientName, current_box_stock
+		SELECT ingredient_name, current_box_stock
         FROM ingredients
 		WHERE current_individual_stock < threshold;
 	END IF;
@@ -184,10 +184,11 @@ CREATE PROCEDURE check_expiration_ingredients (
 )
 BEGIN 
 
-SELECT ingredientName, expiration_date
+SELECT ingredient_name, expiration_date
 FROM ingredients
 WHERE expiration_date < dateValue;
 
 END //
 
 DELIMITER ;
+
