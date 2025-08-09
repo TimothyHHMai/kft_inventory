@@ -14,6 +14,12 @@ def ingredients_api(request, id=None):
     cursor = connection.cursor()
 
     if request.method == 'GET':
+        sortBy = request.GET.get('sortBy')  
+        sortOrder = request.GET.get('sortOrder', 'asc').lower() 
+
+        allowed_sort_columns = {'expiration_date', 'ingredient_name', 'current_individual_stock', 'current_box_stock'}  
+        allowed_sort_orders = {'asc', 'desc'}
+
         if id:
             cursor.execute("SELECT * FROM ingredients WHERE ingredientID = %s", [id])
             row = cursor.fetchone()
@@ -22,7 +28,12 @@ def ingredients_api(request, id=None):
             keys = [col[0] for col in cursor.description]
             return JsonResponse(dict(zip(keys, row)))
         else:
-            cursor.execute("CALL get_all_ingredients()")
+            if sortBy in allowed_sort_columns and sortOrder in allowed_sort_orders:
+                query = f"SELECT * FROM ingredients ORDER BY {sortBy} {sortOrder.upper()}"
+                cursor.execute(query)
+            else:
+                cursor.execute("CALL get_all_ingredients()")
+
             results = cursor.fetchall()
             keys = [col[0] for col in cursor.description]
             data = [dict(zip(keys, row)) for row in results]
@@ -47,6 +58,7 @@ def ingredients_api(request, id=None):
     elif request.method == 'DELETE' and id:
         cursor.callproc('delete_ingredient', [id])
         return JsonResponse({'message': 'Ingredient deleted'})
+
 
     return JsonResponse({'error': 'Method not allowed'}, status=405)
 
@@ -90,22 +102,3 @@ def miscellaneous_api(request, id=None):
         return JsonResponse({'message': 'Miscellaneous deleted'})
 
     return JsonResponse({'error': 'Method not allowed'}, status=405)
-
-
-def get_ingredients_json(request):
-    with connection.cursor() as cursor:
-        cursor.callproc('get_all_ingredients')
-        results = cursor.fetchall()
-        columns = [col[0] for col in cursor.description]
-        ingredients = [dict(zip(columns, row)) for row in results]
-    return JsonResponse({'ingredients': ingredients})
-
-def get_miscellaneous_json(request):
-    with connection.cursor() as cursor:
-        cursor.callproc('get_all_miscellaneous')
-        miscellaneous = cursor.fetchall()
-
-        columns = [col[0] for col in cursor.description]
-
-        miscellaneous = [dict(zip(columns, row)) for row in miscellaneous]
-    return JsonResponse({'miscellaneous': miscellaneous})

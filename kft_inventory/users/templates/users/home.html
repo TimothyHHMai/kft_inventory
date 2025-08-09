@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <script src="https://kit.fontawesome.com/3ef1b1eefa.js" crossorigin="anonymous"></script>
   <title>KFT Database</title>
   <style>
     body {
@@ -20,14 +21,38 @@
       margin-bottom: 40px;
     }
 
+    .item-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 4px 12px;
+      align-items: center;
+    }
+
+    .item-grid label {
+      font-weight: bold;
+    }
+
+    .item-grid span.value {
+      word-break: break-word;
+    }
+
+
     h2 {
       border-bottom: 2px solid #ccc;
       padding-bottom: 5px;
     }
 
+    h3 {
+      padding-bottom: 0px;
+    }
+
     ul {
       list-style: none;
       padding: 0;
+    }
+
+    ul.sort {
+      padding-bottom: 3px;
     }
 
     li {
@@ -57,9 +82,29 @@
 
   <section>
     <h2>Ingredients</h2>
+    
+    <h3>
+      Sort
+    </h3>
+    <ul class="sort">
+      <select id="ingredient_sortBy" onchange="ingredient_change_sort()">
+        <option value="expiration_date">Expiration Date</option>
+        <option value="current_individual_stock">Current Individual Stock</option>
+        <option value="current_box_stock">Current Box Stock</option>
+        <option value="total">Current Total Stock</option> /* wip */
+      </select>
 
-    <button onclick="sortDate()">Sort</button> 
-
+      <select id="ingredient_order" onchange="ingredient_change_order()">
+        <option value="asc">
+          Ascending <i class="fa-solid fa-arrow-up"></i>
+        </option>
+        <option value="desc">
+          Descending <i class="fa-solid fa-arrow-down"></i>
+        </option>
+      </select>
+    </ul>
+    
+    <h3>Edit</h3>
 
     <form id="ingredient-form">
       <input type="hidden" id="ingredientID">
@@ -81,8 +126,31 @@
   </section>
 
   <script>
+    var ingredient_order = "asc";
+    var ingredient_sortBy = "expiration_date";
+
+    async function ingredient_change_sort() {
+      const select = document.getElementById('ingredient_sortBy');
+      const value = select.value;
+      ingredient_sortBy = value;
+
+      fetchIngredients();
+    }
+    async function ingredient_change_order() {
+      const select = document.getElementById('ingredient_order');
+      const value = select.value;
+      ingredient_order = value;
+
+      fetchIngredients();
+    }
+  </script>
+
+  <script>
     async function fetchIngredients() {
-      const response = await fetch('/api/ingredients/');
+      let url = '/api/ingredients/?sortBy=' + ingredient_sortBy 
+        + "&sortOrder=" + ingredient_order;
+      
+      const response = await fetch(url);
       const data = await response.json();
       const list = document.getElementById('ingredient-list');
       list.innerHTML = '';
@@ -95,10 +163,13 @@
       data.ingredients.forEach(item => {
         const li = document.createElement('li');
         li.innerHTML = `
-          <span>
-            ${item.ingredient_name} - ${item.type} 
-            (Boxes: ${item.current_box_stock}, Individual: ${item.current_individual_stock})
-          </span>
+          <div class="item-grid">
+            <label>Name:</label> <span class="value">${item.ingredient_name}</span>
+            <label>Type:</label> <span class="value">${item.type}</span>
+            <label>Boxes:</label> <span class="value">${item.current_box_stock}</span>
+            <label>Individual:</label> <span class="value">${item.current_individual_stock}</span>
+            <label>Expiration:</label> <span class="value">${item.expiration_date}</span>
+          </div>
           <span class="actions">
             <button onclick="editIngredient(${item.ingredientID})">Edit</button>
             <button onclick="deleteIngredient(${item.ingredientID})">Delete</button>
@@ -172,6 +243,8 @@
   <section>
     <h2>Miscellaneous</h2>
 
+    <h3>Edit</h3>
+    
     <form id="miscellaneous-form">
       <input type="hidden" id="miscellaneousID">
       <input type="text" id="miscellaneous_name" placeholder="Name" required>
@@ -199,10 +272,11 @@
       data.miscellaneous.forEach(item => {
         const li = document.createElement('li');
         li.innerHTML = `
-          <span>
-            ${item.miscellaneous_name} - 
-            (Boxes: ${item.current_box_stock}, Individual: ${item.current_individual_stock})
-          </span>
+          <div class="item-grid">
+            <label>Name:</label> <span class="value">${item.miscellaneous_name}</span>
+            <label>Boxes:</label> <span class="value">${item.current_box_stock}</span>
+            <label>Individual:</label> <span class="value">${item.current_individual_stock}</span>
+          </div>
           <span class="actions">
             <button onclick="editMiscellaneous(${item.miscellaneousID})">Edit</button>
             <button onclick="deleteMiscellaneous(${item.miscellaneousID})">Delete</button>
@@ -269,10 +343,5 @@
     fetchMiscellaneous();
   </script>
 
-  <script>
-    async function sortDate() {
-      console.log("sort call");
-    }
-  </script>
 </body>
 </html>
