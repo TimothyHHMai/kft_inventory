@@ -37,15 +37,15 @@
       border-radius: 5px;
     }
 
-    li.span {
+    li.editing {
+      background-color: rgb(136, 251, 251); 
+      border: 2px solid maroon;
+    }
+
+    span.actions {
       display: flex;
       gap: 10px;
       justify-content: end; 
-    }
-
-    li.editing {
-      background-color: cyan; 
-      border: 2px solid maroon;
     }
 
   </style>
@@ -57,6 +57,9 @@
 
   <section>
     <h2>Ingredients</h2>
+
+    <button onclick="sortDate()">Sort</button> 
+
 
     <form id="ingredient-form">
       <input type="hidden" id="ingredientID">
@@ -266,6 +269,10 @@
     fetchMiscellaneous();
   </script>
 
-
+  <script>
+    async function sortDate() {
+      console.log("sort call");
+    }
+  </script>
 </body>
 </html>
