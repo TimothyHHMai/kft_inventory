@@ -67,6 +67,12 @@ def miscellaneous_api(request, id=None):
     cursor = connection.cursor()
 
     if request.method == 'GET':
+        sortBy = request.GET.get('sortBy')  
+        sortOrder = request.GET.get('sortOrder', 'asc').lower() 
+
+        allowed_sort_columns = {'miscellaneous_name', 'current_individual_stock', 'current_box_stock'}  
+        allowed_sort_orders = {'asc', 'desc'}
+
         if id:
             cursor.execute("SELECT * FROM miscellaneous WHERE miscellaneousID = %s", [id])
             row = cursor.fetchone()
@@ -75,11 +81,17 @@ def miscellaneous_api(request, id=None):
             keys = [col[0] for col in cursor.description]
             return JsonResponse(dict(zip(keys, row)))
         else:
-            cursor.execute("CALL get_all_miscellaneous()")
+            if sortBy in allowed_sort_columns and sortOrder in allowed_sort_orders:
+                query = f"SELECT * FROM miscellaneous ORDER BY {sortBy} {sortOrder.upper()}"
+                cursor.execute(query)
+            else:
+                cursor.execute("CALL get_all_miscellaneous()")
+
             results = cursor.fetchall()
             keys = [col[0] for col in cursor.description]
             data = [dict(zip(keys, row)) for row in results]
             return JsonResponse({'miscellaneous': data})
+
 
     elif request.method == 'POST':
         data = json.loads(request.body)
