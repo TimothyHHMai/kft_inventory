@@ -1,5 +1,20 @@
 # kft_inventory
 
+## using SQLite (built in Django)
+
+## First Build
+
+### 1. source inventory/Scripts/activate
+### 2. python manage.py makemigrations
+### 3. python manage.py migrate
+### 4. python manage.py loaddata initial_data.json
+
+## Run server
+
+### python manage.py runserver
+
+
+## using mySQL
 
 ## First Build
 

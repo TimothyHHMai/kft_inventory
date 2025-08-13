@@ -247,7 +247,7 @@
       Sort
     </h3>
     <ul class="sort">
-      <select id="miscellaneous" onchange="miscellaneous_change_sort()">
+      <select id="miscellaneous_sortBy" onchange="miscellaneous_change_sort()">
         <option value="current_individual_stock">Current Individual Stock</option>
         <option value="current_box_stock">Current Box Stock</option>
         <option value="total">Current Total Stock</option> /* wip */
@@ -281,6 +281,7 @@
     var miscellaneous_sortBy = "current_individual_stock";
 
     async function miscellaneous_change_sort() {
+      console.log("misc sort call");
       const select = document.getElementById('miscellaneous_sortBy');
       const value = select.value;
       miscellaneous_sortBy = value;
