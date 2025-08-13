@@ -1,4 +1,4 @@
- kft_inventory
+# kft_inventory
 
 # using SQLite (built in Django)
 
