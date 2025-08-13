@@ -1,7 +1,6 @@
 from datetime import date
-from .models import Ingredient
+from ..models import Ingredient
 
-# 1. Insert Ingredient
 def insert_ingredient(name, type_, quantity_box, current_ind_stock, current_box_stock, expiration_date):
     return Ingredient.objects.create(
         ingredient_name=name,
@@ -12,11 +11,9 @@ def insert_ingredient(name, type_, quantity_box, current_ind_stock, current_box_
         expiration_date=expiration_date
     )
 
-# 2. Get All Ingredients
 def get_all_ingredients():
     return Ingredient.objects.all()
 
-# 3. Update Ingredient
 def update_ingredient(ingredient_id, name, type_, quantity_box, current_ind_stock, current_box_stock, expiration_date):
     return Ingredient.objects.filter(ingredientID=ingredient_id).update(
         ingredient_name=name,
@@ -27,11 +24,10 @@ def update_ingredient(ingredient_id, name, type_, quantity_box, current_ind_stoc
         expiration_date=expiration_date
     )
 
-# 4. Delete Ingredient
+
 def delete_ingredient(ingredient_id):
     return Ingredient.objects.filter(ingredientID=ingredient_id).delete()
 
-# 5. Add From Ingredients (auto stock adjustment)
 def add_from_ingredients(auto_box, ingredient_id, qty_add_individual, qty_add_box):
     try:
         ing = Ingredient.objects.get(ingredientID=ingredient_id)
@@ -62,7 +58,6 @@ def add_from_ingredients(auto_box, ingredient_id, qty_add_individual, qty_add_bo
 
     return {"message": msg}
 
-# 6. Check Supplies Ingredients
 def check_supplies_ingredients(stock_type, threshold):
     if stock_type == 'i':
         return Ingredient.objects.filter(current_individual_stock__lt=threshold).values('ingredient_name', 'current_individual_stock')
@@ -70,6 +65,5 @@ def check_supplies_ingredients(stock_type, threshold):
         return Ingredient.objects.filter(current_box_stock__lt=threshold).values('ingredient_name', 'current_box_stock')
     return []
 
-# 7. Check Expiration Ingredients
 def check_expiration_ingredients(date_value):
     return Ingredient.objects.filter(expiration_date__lt=date_value).values('ingredient_name', 'expiration_date')
