@@ -1,6 +1,6 @@
-# kft_inventory
+ kft_inventory
 
-## using SQLite (built in Django)
+# using SQLite (built in Django)
 
 ## First Build
 
@@ -14,7 +14,7 @@
 ### python manage.py runserver
 
 
-## using mySQL
+# using mySQL
 
 ## First Build
 
