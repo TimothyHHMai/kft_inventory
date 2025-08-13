@@ -1,6 +1,5 @@
 # KFT_INVENTORY
 
-
 ## using SQLite (default)
 
 ### First Build
@@ -15,7 +14,7 @@
 #### python manage.py runserver
 
 
-## using mySQL
+# using mySQL
 
 ### First Build
 
@@ -29,4 +28,7 @@
 
 ### Run server
 
+
 #### python manage.py runserver
+
+
