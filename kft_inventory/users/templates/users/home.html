@@ -243,6 +243,25 @@
   <section>
     <h2>Miscellaneous</h2>
 
+    <h3>
+      Sort
+    </h3>
+    <ul class="sort">
+      <select id="miscellaneous_sortBy" onchange="miscellaneous_change_sort()">
+        <option value="current_individual_stock">Current Individual Stock</option>
+        <option value="current_box_stock">Current Box Stock</option>
+        <option value="total">Current Total Stock</option> /* wip */
+      </select>
+
+      <select id="miscellaneous_order" onchange="miscellaneous_change_order()">
+        <option value="asc">
+          Ascending <i class="fa-solid fa-arrow-up"></i>
+        </option>
+        <option value="desc">
+          Descending <i class="fa-solid fa-arrow-down"></i>
+        </option>
+      </select>
+    </ul>
     <h3>Edit</h3>
     
     <form id="miscellaneous-form">
@@ -258,8 +277,32 @@
   </section>
 
   <script>
+    var miscellaneous_order = "asc";
+    var miscellaneous_sortBy = "current_individual_stock";
+
+    async function miscellaneous_change_sort() {
+      console.log("misc sort call");
+      const select = document.getElementById('miscellaneous_sortBy');
+      const value = select.value;
+      miscellaneous_sortBy = value;
+
+      fetchMiscellaneous();
+    }
+    async function miscellaneous_change_order() {
+      const select = document.getElementById('miscellaneous_order');
+      const value = select.value;
+      miscellaneous_order = value;
+
+      fetchMiscellaneous();
+    }
+  </script>
+
+  <script>
     async function fetchMiscellaneous() {
-      const response = await fetch('/api/miscellaneous/');
+      let url = '/api/miscellaneous/?sortBy=' + miscellaneous_sortBy 
+        + "&sortOrder=" + miscellaneous_order;
+
+      const response = await fetch(url);
       const data = await response.json();
       const list = document.getElementById('miscellaneous-list');
       list.innerHTML = '';
