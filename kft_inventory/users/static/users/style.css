@@ -1,0 +1,120 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #ccc;
+}
+header {
+    background-color: rgb(54, 195, 251);
+    color: white;
+    padding: 15px;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+main {
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 20px; 
+    justify-content: center; 
+}
+section {
+    margin-top: 5px;
+    background-color: white;
+    padding: 10px;
+    box-shadow:  0 4px 8px 0 rgba(0, 0, 0, 0.2), 
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    width: 80%;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 40px;
+}
+#ingredient-table tbody tr:nth-child(even),
+#miscellaneous-table tbody tr:nth-child(even) {
+    background-color: #f2f2f2; 
+}
+
+#ingredient-table tbody tr:nth-child(odd),
+#miscellaneous-table tbody tr:nth-child(odd) {
+    background-color: white;
+}
+
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+}
+
+th {
+    background-color: rgb(54, 195, 251);
+    color: white;
+}
+
+tr.editing {
+    background-color: lightcoral;
+    border: 2px solid maroon;
+}
+
+button {
+    padding: 4px 8px;
+    margin: 0;
+    background-color: white;
+    border-color: rgb(54, 195, 251);
+    color: rgb(54, 195, 251);
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+button:hover{
+    background: lightblue;
+    color: white;
+}
+
+form {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+form input, form select, form button {
+    padding: 5px;
+}
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 100; 
+    padding-top: 100px; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.4); 
+
+      
+}
+.modal-content {
+    background-color: white;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 300px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+ 
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: black;
+}

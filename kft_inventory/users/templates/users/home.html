@@ -1,77 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <script src="https://kit.fontawesome.com/3ef1b1eefa.js" crossorigin="anonymous"></script>
   <title>KFT Database</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background-color: #ccc;
-    }
-
-    header {
-      background-color: rgb(54, 195, 251);
-      color: white;
-      padding: 15px;
-      text-align: center;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    main {
-      display: flex;
-      flex-wrap: wrap; 
-      gap: 20px; 
-      justify-content: center; 
-    }
-    section {
-      margin-top: 5px;
-      background-color: white;
-      padding: 10px;
-      box-shadow:  0 4px 8px 0 rgba(0, 0, 0, 0.2), 
-        0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 40px;
-      background-color: antiquewhite;
-    }
-
-    th, td {
-      border: 1px solid #ccc;
-      padding: 8px;
-      text-align: center;
-    }
-
-    th {
-      background-color: rgb(54, 195, 251);
-      color: white;
-    }
-
-    tr.editing {
-      background-color: lightcoral;
-      border: 2px solid maroon;
-    }
-
-    button {
-      padding: 4px 8px;
-      margin: 0;
-    }
-
-    form {
-      margin-bottom: 20px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    form input, form select, form button {
-      padding: 5px;
-    }
-  </style>
-
+  <link rel="stylesheet" href="{% static 'users/style.css' %}">
 </head>
 <body>
   <header>
@@ -82,19 +16,29 @@
 <section>
   <h2>Ingredients</h2>
 
-  <filter>
-    <h3>Sort</h3>
-    <select id="ingredient_sortBy" onchange="ingredient_change_sort()">
-      <option value="expiration_date">Expiration Date</option>
-      <option value="current_individual_stock">Individual Stock</option>
-      <option value="current_box_stock">Box Stock</option>
-      <option value="total">Total Stock</option>
-    </select>
+  <button id="filterBtn"><i class="fa-solid fa-filter"></i>Filters</button>
 
-    <select id="ingredient_order" onchange="ingredient_change_order()">
-      <option value="asc">Ascending</option>
-      <option value="desc">Descending</option>
-    </select>
+  <div id="filterModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h3>Filter / Sort</h3>
+      <label for="ingredient_sortBy">Sort By:</label>
+      <select id="ingredient_sortBy">
+        <option value="expiration_date">Expiration Date</option>
+        <option value="current_individual_stock">Individual Stock</option>
+        <option value="current_box_stock">Box Stock</option>
+        <option value="total">Total Stock</option>
+      </select>
+
+      <label for="ingredient_order">Order:</label>
+      <select id="ingredient_order">
+        <option value="asc">Ascending</option>
+        <option value="desc">Descending</option>
+      </select>
+
+      <button id="applyFilter">Apply</button>
+    </div>
+  </div>
 
     <h3>Edit</h3>
     <form id="ingredient-form">
@@ -180,217 +124,7 @@
 </section>
 </main>
 
-<script>
-  var ingredient_order = "asc";
-  var ingredient_sortBy = "expiration_date";
-
-  async function ingredient_change_sort() {
-    ingredient_sortBy = document.getElementById('ingredient_sortBy').value;
-    fetchIngredients();
-  }
-
-  async function ingredient_change_order() {
-    ingredient_order = document.getElementById('ingredient_order').value;
-    fetchIngredients();
-  }
-
-  async function fetchIngredients() {
-    let url = '/api/ingredients/?sortBy=' + ingredient_sortBy + "&sortOrder=" + ingredient_order;
-    const response = await fetch(url);
-    const data = await response.json();
-    const tbody = document.querySelector('#ingredient-table tbody');
-    tbody.innerHTML = '';
-
-    if (data.ingredients.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="7">No ingredients found.</td></tr>';
-      return;
-    }
-
-    data.ingredients.forEach(item => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${item.ingredient_name}</td>
-        <td>${item.type}</td>
-        <td>${item.quantity_box}</td>
-        <td>${item.current_box_stock}</td>
-        <td>${item.current_individual_stock}</td>
-        <td>${item.expiration_date}</td>
-        <td>
-          <button onclick="editIngredient(${item.ingredientID})">
-            Edit
-            <i class="fa-solid fa-pen-to-square"></i>
-            </button>
-          <button onclick="deleteIngredient(${item.ingredientID})">
-            Delete
-            <i class="fa-solid fa-trash"></i>
-            </button>
-        </td>
-      `;
-      tbody.appendChild(tr);
-    });
-  }
-
-  document.getElementById('ingredient-form').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const id = document.getElementById('ingredientID').value;
-    const payload = {
-      ingredient_name: document.getElementById('ingredient_name').value,
-      type: document.getElementById('type').value,
-      quantity_box: parseInt(document.getElementById('quantity_box').value),
-      current_box_stock: parseInt(document.getElementById('current_box_stock').value),
-      current_individual_stock: parseInt(document.getElementById('current_individual_stock').value),
-      expiration_date: document.getElementById('expiration_date').value
-    };
-
-    const url = id ? `/api/ingredients/${id}/` : `/api/ingredients/`;
-    const method = id ? 'PUT' : 'POST';
-
-    await fetch(url, {
-      method: method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-
-    document.getElementById('ingredientID').value = '';
-    this.reset();
-    fetchIngredients();
-  });
-
-  async function editIngredient(id) {
-    const response = await fetch(`/api/ingredients/${id}/`);
-    const data = await response.json();
-
-    document.querySelectorAll('#ingredient-table tbody tr').forEach(tr => tr.classList.remove('editing'));
-    const rows = document.querySelectorAll('#ingredient-table tbody tr');
-    rows.forEach(tr => {
-      if (tr.innerHTML.includes(`editIngredient(${id})`)) {
-        tr.classList.add('editing');
-      }
-    });
-
-    document.getElementById('ingredientID').value = id;
-    document.getElementById('ingredient_name').value = data.ingredient_name;
-    document.getElementById('type').value = data.type;
-    document.getElementById('quantity_box').value = data.quantity_box;
-    document.getElementById('current_box_stock').value = data.current_box_stock;
-    document.getElementById('current_individual_stock').value = data.current_individual_stock;
-    document.getElementById('expiration_date').value = data.expiration_date;
-  }
-
-  async function deleteIngredient(id) {
-    if (!confirm('Are you sure you want to delete this ingredient?')) return;
-    await fetch(`/api/ingredients/${id}/`, { method: 'DELETE' });
-    fetchIngredients();
-  }
-
-  fetchIngredients();
-
-  var miscellaneous_order = "asc";
-  var miscellaneous_sortBy = "current_individual_stock";
-
-  async function miscellaneous_change_sort() {
-    console.log("misc sort call");
-    const select = document.getElementById('miscellaneous_sortBy');
-    const value = select.value;
-    miscellaneous_sortBy = value;
-
-    fetchMiscellaneous();
-  }
-  async function miscellaneous_change_order() {
-    const select = document.getElementById('miscellaneous_order');
-    const value = select.value;
-    miscellaneous_order = value;
-
-    fetchMiscellaneous();
-  }
-  
-  async function fetchMiscellaneous() {
-     let url = '/api/miscellaneous/?sortBy=' + miscellaneous_sortBy 
-        + "&sortOrder=" + miscellaneous_order;
-
-    const response = await fetch(url);
-    const data = await response.json();
-    const tbody = document.querySelector('#miscellaneous-table tbody');
-    tbody.innerHTML = '';
-
-    if (data.miscellaneous.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="5">No miscellaneous found.</td></tr>';
-      return;
-    }
-
-    data.miscellaneous.forEach(item => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${item.miscellaneous_name}</td>
-        <td>${item.quantity_box}</td>
-        <td>${item.current_box_stock}</td>
-        <td>${item.current_individual_stock}</td>
-        <td>
-          <button onclick="editMiscellaneous(${item.miscellaneousID})">
-            Edit
-            <i class="fa-solid fa-pen-to-square"></i>
-            </button>
-          <button onclick="deleteMiscellaneous(${item.miscellaneousID})">
-            Delete
-            <i class="fa-solid fa-trash"></i>
-            </button>
-        </td>
-      `;
-      tbody.appendChild(tr);
-    });
-  }
-
-  document.getElementById('miscellaneous-form').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const id = document.getElementById('miscellaneousID').value;
-    const payload = {
-      miscellaneous_name: document.getElementById('miscellaneous_name').value,
-      quantity_box: parseInt(document.getElementById('misc_quantity_box').value),
-      current_box_stock: parseInt(document.getElementById('misc_current_box_stock').value),
-      current_individual_stock: parseInt(document.getElementById('misc_current_individual_stock').value),
-    };
-
-    const url = id ? `/api/miscellaneous/${id}/` : `/api/miscellaneous/`;
-    const method = id ? 'PUT' : 'POST';
-
-    await fetch(url, {
-      method: method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-
-    document.getElementById('miscellaneousID').value = '';
-    this.reset();
-    fetchMiscellaneous();
-  });
-
-  async function editMiscellaneous(id) {
-    const response = await fetch(`/api/miscellaneous/${id}/`);
-    const data = await response.json();
-
-    document.querySelectorAll('#miscellaneous-table tbody tr').forEach(tr => tr.classList.remove('editing'));
-    const rows = document.querySelectorAll('#miscellaneous-table tbody tr');
-    rows.forEach(tr => {
-      if (tr.innerHTML.includes(`editMiscellaneous(${id})`)) {
-        tr.classList.add('editing');
-      }
-    });
-
-    document.getElementById('miscellaneousID').value = id;
-    document.getElementById('miscellaneous_name').value = data.miscellaneous_name;
-    document.getElementById('misc_quantity_box').value = data.quantity_box;
-    document.getElementById('misc_current_box_stock').value = data.current_box_stock;
-    document.getElementById('misc_current_individual_stock').value = data.current_individual_stock;
-  }
-
-  async function deleteMiscellaneous(id) {
-    if (!confirm('Are you sure you want to delete this miscellaneous?')) return;
-    await fetch(`/api/miscellaneous/${id}/`, { method: 'DELETE' });
-    fetchMiscellaneous();
-  }
-
-  fetchMiscellaneous();
-</script>
+<script src="{% static 'users/script.js' %}"></script>
 
 </body>
 </html>
