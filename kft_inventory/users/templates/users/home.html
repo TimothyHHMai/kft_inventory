@@ -16,29 +16,34 @@
 <section>
   <h2>Ingredients</h2>
 
-  <button id="filterBtn"><i class="fa-solid fa-filter"></i>Filters</button>
+  <button id="filterBtnIngredients"><i class="fa-solid fa-filter"></i>Filters</button>
 
-  <div id="filterModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h3>Filter / Sort</h3>
-      <label for="ingredient_sortBy">Sort By:</label>
-      <select id="ingredient_sortBy">
-        <option value="expiration_date">Expiration Date</option>
-        <option value="current_individual_stock">Individual Stock</option>
-        <option value="current_box_stock">Box Stock</option>
-        <option value="total">Total Stock</option>
-      </select>
+  <div id="filterModalIngredients" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h3>Filter / Sort</h3>
 
-      <label for="ingredient_order">Order:</label>
-      <select id="ingredient_order">
-        <option value="asc">Ascending</option>
-        <option value="desc">Descending</option>
-      </select>
+    <div class="filter-columns">
+      <div class="filter-column">
+        <h4>Sort By</h4>
+        <label><input type="radio" name="sortByIngredients" value="expiration_date"> Expiration Date</label>
+        <label><input type="radio" name="sortByIngredients" value="current_individual_stock"> Individual Stock</label>
+        <label><input type="radio" name="sortByIngredients" value="current_box_stock"> Box Stock</label>
+        <label><input type="radio" name="sortByIngredients" value="total"> Total Stock</label>
+      </div>
 
-      <button id="applyFilter">Apply</button>
+      <div class="divider"></div>
+
+      <div class="filter-column">
+        <h4>Order</h4>
+        <label><input type="radio" name="orderIngredients" value="asc"> Ascending</label>
+        <label><input type="radio" name="orderIngredients" value="desc"> Descending</label>
+      </div>
     </div>
+
+    <button id="applyFilterIngredients">Apply</button>
   </div>
+</div>
 
     <h3>Edit</h3>
     <form id="ingredient-form">
@@ -79,25 +84,32 @@
 <section>
   <h2>Miscellaneous</h2>
 
-  <h3>
-      Sort
-    </h3>
-    <ul class="sort">
-      <select id="miscellaneous_sortBy" onchange="miscellaneous_change_sort()">
-        <option value="current_individual_stock">Current Individual Stock</option>
-        <option value="current_box_stock">Current Box Stock</option>
-      </select>
+  <button id="filterBtnMiscellaneous"><i class="fa-solid fa-filter"></i>Filters</button>
 
-      <select id="miscellaneous_order" onchange="miscellaneous_change_order()">
-        <option value="asc">
-          Ascending <i class="fa-solid fa-arrow-up"></i>
-        </option>
-        <option value="desc">
-          Descending <i class="fa-solid fa-arrow-down"></i>
-        </option>
-      </select>
-    </ul>
-  </h3>
+  <div id="filterModalMiscellaneous" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h3>Filter / Sort</h3>
+
+    <div class="filter-columns">
+      <div class="filter-column">
+        <h4>Sort By</h4>
+        <label><input type="radio" name="sortByMiscellaneous" value="current_individual_stock"> Individual Stock</label>
+        <label><input type="radio" name="sortByMiscellaneous" value="current_box_stock"> Box Stock</label>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="filter-column">
+        <h4>Order</h4>
+        <label><input type="radio" name="orderMiscellaneous" value="asc"> Ascending</label>
+        <label><input type="radio" name="orderMiscellaneous" value="desc"> Descending</label>
+      </div>
+    </div>
+
+    <button id="applyFilterMiscellaneous">Apply</button>
+  </div>
+</div>
   <h3>Edit</h3>
   <form id="miscellaneous-form">
     <input type="hidden" id="miscellaneousID">
