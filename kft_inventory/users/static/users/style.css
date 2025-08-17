@@ -65,7 +65,7 @@ button {
     color: rgb(54, 195, 251);
     font-size: 15px;
     cursor: pointer;
-    transition: 0.3s;
+    transition: 0.3s ease;
 }
 button:hover{
     background: lightblue;
@@ -92,20 +92,74 @@ form input, form select, form button {
     width: 100%; 
     height: 100%; 
     overflow: auto; 
-    background-color: rgba(0,0,0,0.4); 
-
-      
+    background-color: rgba(0,0,0,0.4);  
 }
+
 .modal-content {
     background-color: white;
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 300px;
-    border-radius: 8px;
+    width: 400px; 
+    border-radius: 12px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
- 
 }
+
+.filter-columns {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+.filter-column {
+    flex: 1;
+    padding: 0 10px;
+}
+
+.filter-column h4 {
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+    text-align: center;
+}
+
+.filter-column label {
+    display: block;
+    margin: 10px 0;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.divider {
+    width: 1px;
+    background-color: #ccc;
+    margin: 0 10px;
+}
+
+.filter-column input[type="radio"] {
+    margin-right: 6px;
+}
+
+#applyFilter {
+    display: block;
+    margin: 20px auto 0 auto;
+    padding: 10px 20px;
+    background-color: rgb(54, 195, 251); 
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+#applyFilter:hover {
+    background-color: lightblue; 
+}
+
 
 .close {
     color: #aaa;

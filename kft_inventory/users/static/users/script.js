@@ -1,20 +1,46 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const modal = document.getElementById("filterModal");
-  const btn = document.getElementById("filterBtn");
-  const span = document.getElementsByClassName("close")[0];
-  const applyFilter = document.getElementById("applyFilter");
+  // Ingredients modal
+  const modalIngredients = document.getElementById("filterModalIngredients");
+  const btnIngredients = document.getElementById("filterBtnIngredients");
+  const closeIngredients = modalIngredients.getElementsByClassName("close")[0];
+  const applyIngredients = document.getElementById("applyFilterIngredients");
 
-  btn.onclick = () => modal.style.display = "block";
-  span.onclick = () => modal.style.display = "none";
-  window.onclick = (event) => { if (event.target == modal) modal.style.display = "none"; }
+  btnIngredients.onclick = () => modalIngredients.style.display = "block";
+  closeIngredients.onclick = () => modalIngredients.style.display = "none";
+  window.onclick = (event) => { if (event.target === modalIngredients) modalIngredients.style.display = "none"; }
 
-  applyFilter.onclick = () => {
-    ingredient_sortBy = document.getElementById('ingredient_sortBy').value;
-    ingredient_order = document.getElementById('ingredient_order').value;
-    modal.style.display = "none";
+  applyIngredients.onclick = () => {
+    const sortBy = document.querySelector('input[name="sortByIngredients"]:checked')?.value;
+    const order = document.querySelector('input[name="orderIngredients"]:checked')?.value;
+    if (!sortBy || !order) { alert("Please select both options."); return; }
+    modalIngredients.style.display = "none";
+    ingredient_sortBy = sortBy;
+    ingredient_order = order;
     fetchIngredients();
   }
+
+  // Miscellaneous modal
+  const modalMisc = document.getElementById("filterModalMiscellaneous");
+  const btnMisc = document.getElementById("filterBtnMiscellaneous");
+  const closeMisc = modalMisc.getElementsByClassName("close")[0];
+  const applyMisc = document.getElementById("applyFilterMiscellaneous");
+
+  btnMisc.onclick = () => modalMisc.style.display = "block";
+  closeMisc.onclick = () => modalMisc.style.display = "none";
+  window.onclick = (event) => { if (event.target === modalMisc) modalMisc.style.display = "none"; }
+
+  applyMisc.onclick = () => {
+    const sortBy = document.querySelector('input[name="sortByMiscellaneous"]:checked')?.value;
+    const order = document.querySelector('input[name="orderMiscellaneous"]:checked')?.value;
+    if (!sortBy || !order) { alert("Please select both options."); return; }
+    modalMisc.style.display = "none";
+    miscellaneous_sortBy = sortBy;
+    miscellaneous_order = order;
+    fetchMiscellaneous();
+  }
 });
+
+
 
 var ingredient_order = "asc";
 var ingredient_sortBy = "expiration_date";
