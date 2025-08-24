@@ -38,8 +38,18 @@ document.addEventListener("DOMContentLoaded", function () {
     miscellaneous_order = order;
     fetchMiscellaneous();
   }
-});
 
+  // Edit modal
+  const modalEdit = document.getElementById("editModalIngredients");
+  const closeEdit = modalEdit.getElementsByClassName("close")[0];
+
+  closeEdit.onclick = () => modalEdit.style.display = "none";
+
+  window.onclick = (event) => { 
+    if (event.target === modalEdit) modalEdit.style.display = "none"; 
+  }
+
+});
 
 
 var ingredient_order = "asc";
@@ -91,7 +101,7 @@ async function fetchIngredients() {
   });
 }
 
-document.getElementById('ingredient-form').addEventListener('submit', async function(e) {
+document.getElementById('filterModalIngredients').addEventListener('submit', async function(e) {
   e.preventDefault();
   const id = document.getElementById('ingredientID').value;
   const payload = {
@@ -115,9 +125,11 @@ document.getElementById('ingredient-form').addEventListener('submit', async func
   document.getElementById('ingredientID').value = '';
   this.reset();
   fetchIngredients();
-});
+}); 
 
 async function editIngredient(id) {
+  console.log("edit ingredient0");
+
   const response = await fetch(`/api/ingredients/${id}/`);
   const data = await response.json();
 
@@ -136,6 +148,9 @@ async function editIngredient(id) {
   document.getElementById('current_box_stock').value = data.current_box_stock;
   document.getElementById('current_individual_stock').value = data.current_individual_stock;
   document.getElementById('expiration_date').value = data.expiration_date;
+
+  console.log("edit ingredient1");
+  document.getElementById("editModalIngredients").style.display = "block";
 }
 
 async function deleteIngredient(id) {
@@ -226,6 +241,7 @@ document.getElementById('miscellaneous-form').addEventListener('submit', async f
 });
 
 async function editMiscellaneous(id) {
+  console.log("edit misc");
   const response = await fetch(`/api/miscellaneous/${id}/`);
   const data = await response.json();
 
