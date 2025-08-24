@@ -19,33 +19,33 @@
   <button id="filterBtnIngredients"><i class="fa-solid fa-filter"></i>Filters</button>
 
   <div id="filterModalIngredients" class="modal">
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <h3>Filter / Sort</h3>
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h3>Filter / Sort</h3>
 
-    <div class="filter-columns">
-      <div class="filter-column">
-        <h4>Sort By</h4>
-        <label><input type="radio" name="sortByIngredients" value="expiration_date"> Expiration Date</label>
-        <label><input type="radio" name="sortByIngredients" value="current_individual_stock"> Individual Stock</label>
-        <label><input type="radio" name="sortByIngredients" value="current_box_stock"> Box Stock</label>
-        <label><input type="radio" name="sortByIngredients" value="total"> Total Stock</label>
+      <div class="filter-columns">
+        <div class="filter-column">
+          <h4>Sort By</h4>
+          <label><input type="radio" name="sortByIngredients" value="expiration_date"> Expiration Date</label>
+          <label><input type="radio" name="sortByIngredients" value="current_individual_stock"> Individual Stock</label>
+          <label><input type="radio" name="sortByIngredients" value="current_box_stock"> Box Stock</label>
+          <label><input type="radio" name="sortByIngredients" value="total"> Total Stock</label>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="filter-column">
+          <h4>Order</h4>
+          <label><input type="radio" name="orderIngredients" value="asc"> Ascending</label>
+          <label><input type="radio" name="orderIngredients" value="desc"> Descending</label>
+        </div>
       </div>
-
-      <div class="divider"></div>
-
-      <div class="filter-column">
-        <h4>Order</h4>
-        <label><input type="radio" name="orderIngredients" value="asc"> Ascending</label>
-        <label><input type="radio" name="orderIngredients" value="desc"> Descending</label>
-      </div>
+      <button id="applyFilterIngredients">Apply</button>
     </div>
-
-    <button id="applyFilterIngredients">Apply</button>
   </div>
-</div>
 
-    <h3>Edit</h3>
+<!--
+<h3>Edit</h3>
     <form id="ingredient-form">
       <input type="hidden" id="ingredientID">
       <input type="text" id="ingredient_name" placeholder="Name" required>
@@ -61,7 +61,48 @@
       <input type="date" id="expiration_date" required>
       <button type="submit">Save Ingredient</button>
     </form>
-  </filter>
+-->
+
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+    <span class="close">&times;</span>
+    <h3>Edit</h3>
+
+    <div class="filter-columns">
+      <div class="filter-column">
+        <label>Ingredient Name</label>
+        <label>Type</label>
+        <label>Box Stock</label>
+        <label>Total Stock</label>
+        <label>Individual Stock</label>
+        <label>Expiration Date</label>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="filter-column">
+        <form id="ingredient-form">
+          <input type="hidden" id="ingredientID">
+          <input type="text" id="ingredient_name" placeholder="Name" required>
+          <select id="type">
+            <option value="Syrup">Syrup</option>
+            <option value="Powder">Powder</option>
+            <option value="Topping">Topping</option>
+            <option value="Tea">Tea</option>
+          </select>
+          <input type="number" id="quantity_box" placeholder="Qty per Box" required>
+          <input type="number" id="current_box_stock" placeholder="Box Stock" required>
+          <input type="number" id="current_individual_stock" placeholder="Individual Stock" required>
+          <input type="date" id="expiration_date" required>
+        </form>
+      </div>
+    </div>
+
+    <button id="applyEdit">Apply</button>
+  </div>
+
+  </div>
+
   
 
   <table id="ingredient-table">
